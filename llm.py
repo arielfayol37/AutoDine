@@ -12,10 +12,11 @@ from RealtimeSTT import AudioToTextRecorder
 from RealtimeTTS import TextToAudioStream, SystemEngine, GTTSEngine
 
 # engine = SystemEngine() # replace with your TTS engine
-engine = GTTSEngine()
-stream = TextToAudioStream(engine)
-# engine = pyttsx3.init() # object creation
-client = openai.OpenAI(api_key="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")
+# engine = GTTSEngine()
+
+# stream = TextToAudioStream(engine)
+engine = pyttsx3.init() # object creation
+client = openai.OpenAI(api_key="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")
 
 menu = """
     - Burger: Delicious beef burger
@@ -82,6 +83,7 @@ Instructions:
     - If the user hasn't ordered yet, the "ORDER" field should be empty: "ORDER": {}.
     - The "output" should guide the user to either order more or confirm their request.
     - When the conversation is complete, set "output": "DONE".
+    - Sometimes the user will seem to repeat part of what you have said, but that is a bug. ALWAYS IGNORE THAT PART.
 
 4. Handling Edge Cases:
     - If the user uses inappropriate language, respond politely and redirect to the menu or confirm if they want to order.
@@ -89,7 +91,7 @@ Instructions:
     - Always adapt your response to the tone and details provided by the user.
 
 5. When you stop interacting with the customer, your output value should end with DONE
-6. Game Trick: Sometimes the user will repeat part of what you have said. ALWAYS IGNORE THAT PART.
+
 
 Example interaction:
     - User Input: "I'd like a burger with extra cheese and a side of fries, and also a chicken biryani with 2 extra bowls rice and extra chicken. No pickles please on my burger."
@@ -171,7 +173,8 @@ def make_api_call(system_prompt, messages):
     return response_text.strip()
 
 def chatbot_conversation():
-    recorder = AudioToTextRecorder(language="en", spinner=True, model="base.en", realtime_processing_pause=0.8)
+    # recorder = AudioToTextRecorder(language="en", spinner=True, model="base.en", realtime_processing_pause=0.2)
+    recorder = AudioToTextRecorder(language="en", spinner=False)
     print("Here is the MENU: \n")
     print(menu)
     ai_reply = ""
@@ -202,9 +205,10 @@ def chatbot_conversation():
 
             # Feed AI reply to stream and play, but don't recapture it as user input
             listening = False  # Pause listening to avoid capturing AI response
-            stream.feed(ai_reply)
-            stream.play()
-
+            # stream.feed(ai_reply)
+            # stream.play()
+            engine.say(ai_reply)
+            engine.runAndWait()
             listening = True  # Resume listening for user input after AI response
 
             if done:

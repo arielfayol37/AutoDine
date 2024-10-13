@@ -27,6 +27,7 @@ body {
     border-radius: 3%;
     display: flex;
     flex-direction: column;
+    height: 90vh;
 }
 
 .currentState {
