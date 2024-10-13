@@ -1,0 +1,57 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery</title>
+    <link rel="stylesheet" href="{% static 'front/styles.css' %}">
+    <script src="{% static 'front/scroll.js' %}"></script>
+    <script src="{% static 'front/dashboard_update.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        {% for item in menu_items %}
+        <div class="card">
+            <input type="hidden" value="{{item.name}}"/>
+            <!-- Use the dynamically generated image URL -->
+            <img src="{{ item.image_url }}" alt="{{ item.name }}">
+            <div class="title-rating">
+                <h2>{{ item.name }}</h2>
+
+                <div class="rating">
+                    <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+                </div>
+            </div>
+                <!--<p>{{ item.description }}</p>-->
+
+                <!-- Display Ingredients -->
+                <div class="ingredients hide"> <!--Ingredients:-->
+                    {% for ingredient_name, quantity in item.get_ingredients.items %}
+                        <div>{{ ingredient_name }}: {{ quantity }}</div>
+                    {% empty %}
+                        <div>No ingredients listed</div>
+                    {% endfor %}
+                </div>
+                <p>Price: <b>${{ item.price }}</b></p>
+            
+        </div>
+        {% endfor %}
+    </div>
+    <div class="dashboard">
+        <div class="currentState">
+            <!--
+               <div class="stateItem"></div> <div class="stateItem"></div> <div class="stateItem"></div> 
+               <div class="stateItem"></div> 
+            -->
+        
+        </div>
+
+        <div class="stateInfo">
+            <h2 class="totalCost">Total: #.#</h2>
+        </div>
+
+    </div>
+</body>
+</html>
