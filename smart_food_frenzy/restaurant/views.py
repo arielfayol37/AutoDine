@@ -6,7 +6,7 @@ import traceback
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt  # Import csrf_exempt decorator
-from .models import Inventory, MenuItem, OrderItem, Order
+from .models import Inventory, MenuItem, OrderItem, Order, Ingredient
 import json
 import time
 
@@ -63,6 +63,10 @@ def sse_view(request):
 def menu_view(request):
     menu_items = MenuItem.objects.all()  # Fetch all menu items
     return render(request, 'restaurant/menu_items.html', {'menu_items': menu_items})
+
+def ingredients_list(request):
+    ingredients = Ingredient.objects.all()  # Fetch all ingredients from the database
+    return render(request, 'restaurant/ingredients_list.html', {'ingredients': ingredients})
 
 @csrf_exempt  # Disable CSRF protection for this view
 @require_POST

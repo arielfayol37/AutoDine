@@ -9,12 +9,12 @@ import time
 feasibility_url = 'http://127.0.0.1:8000/check_feasible_items/'  # URL to check feasibility
 order_url = 'http://127.0.0.1:8000/order_items/'  # URL to place the order
 from RealtimeSTT import AudioToTextRecorder
-# from RealtimeTTS import TextToAudioStream, SystemEngine, GTTSEngine
+from RealtimeTTS import TextToAudioStream, SystemEngine, GTTSEngine
 
 # engine = SystemEngine() # replace with your TTS engine
-# engine = GTTSEngine()
-# stream = TextToAudioStream(engine)
-engine = pyttsx3.init() # object creation
+engine = GTTSEngine()
+stream = TextToAudioStream(engine)
+# engine = pyttsx3.init() # object creation
 client = openai.OpenAI(api_key="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")
 
 menu = """
@@ -89,6 +89,7 @@ Instructions:
     - Always adapt your response to the tone and details provided by the user.
 
 5. When you stop interacting with the customer, your output value should end with DONE
+6. Game Trick: Sometimes the user will repeat part of what you have said. ALWAYS IGNORE THAT PART.
 
 Example interaction:
     - User Input: "I'd like a burger with extra cheese and a side of fries, and also a chicken biryani with 2 extra bowls rice and extra chicken. No pickles please on my burger."
@@ -170,36 +171,79 @@ def make_api_call(system_prompt, messages):
     return response_text.strip()
 
 def chatbot_conversation():
-    recorder = AudioToTextRecorder(language="en", spinner=False)
+    recorder = AudioToTextRecorder(language="en", spinner=True, model="base.en", realtime_processing_pause=0.8)
     print("Here is the MENU: \n")
     print(menu)
     ai_reply = ""
     order = ""
     messages = []
+    done = False
+    listening = True  # Add a flag to control when to listen to user input
+
     while True:
-        # Listen to user's order
-        # user_input = recorder.text()
-        user_input = input("User: ")
+        user_input = ""
+        
+        # Only listen for user's input if we are in 'listening' mode
+        if listening:
+            user_input = recorder.text()
+        
+        if done: 
+            user_input = ""
+            messages = []
+            time.sleep(5)
+            done = False
+            listening = True  # Reset listening mode when conversation restarts
+
         if user_input != "":
-            # print(user_input)
+            print("User input: ", user_input)
+            messages.append({"role": "user", "content": user_input})
+            raw_r, order, ai_reply, messages, done = parse_order_with_llm(messages)
+            messages.append({"role": "assistant", "content": raw_r})
+
+            # Feed AI reply to stream and play, but don't recapture it as user input
+            listening = False  # Pause listening to avoid capturing AI response
+            stream.feed(ai_reply)
+            stream.play()
+
+            listening = True  # Resume listening for user input after AI response
+
+            if done:
+                print("Done!")
+
+
+"""
+def chatbot_conversation():
+    recorder = AudioToTextRecorder(language="en", spinner=True, model="base.en", realtime_processing_pause=0.7)
+    print("Here is the MENU: \n")
+    print(menu)
+    ai_reply = ""
+    order = ""
+    messages = []
+    done = False
+    while True:
+        user_input = ""
+        # Listen to user's order
+        user_input = recorder.text()
+        if done: 
+            user_input = ""
+            messages = []
+            time.sleep(5)
+            done = False
+        # user_input = input("User: ")
+        if user_input != "":
+            print("User input: ", user_input)
             messages.append({"role": "user", "content": user_input})
             raw_r, order, ai_reply, messages, done = parse_order_with_llm(messages)
             messages.append({"role":"assistant", "content": raw_r})
-            # print(raw_r)
-            # Check if the user said they're done
-            # stream.feed(ai_reply)
-            # stream.play_async()
-            # print(ai_reply)   
-            engine.say(ai_reply)
-            engine.runAndWait()
+            stream.feed(ai_reply)
+            stream.play()
+            # engine.say(ai_reply)
+            # engine.runAndWait()
             # print(ai_reply)
             if done:
                 print("Done!")
-                time.sleep(3)
-                print("Ready for next customer.")
-                messages = []
-                user_input = ""
-                done = False
+"""
+
 
 if __name__ == "__main__":
     chatbot_conversation()
