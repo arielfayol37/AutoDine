@@ -7,6 +7,7 @@ body {
     background-color: #f5c299;
     display: flex;
     flex-direction: row;
+    overflow: hiddengitgi;
 }
 
 .container {
@@ -35,13 +36,13 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between; /* Distribute items evenly */
-    padding: 1%;
+    justify-content: space-around;
+    padding: 2%;
 }
 
 .stateInfo {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     align-self: center;
 }
@@ -118,4 +119,42 @@ body {
  
 .hide {
     display: none;
+}
+
+/* Animation for moving cards */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Hide cards initially */
+.hide {
+    display: none;
+}
+
+/* Animate card appearing in currentState */
+.stateItem {
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* Card leaving currentState */
+.removeCard {
+    animation: slideOut 0.5s ease forwards;
 }

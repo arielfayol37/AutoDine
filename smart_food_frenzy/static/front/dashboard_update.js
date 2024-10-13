@@ -34,8 +34,16 @@ document.addEventListener('DOMContentLoaded', function() {
             costH.innerHTML = `Total #.#`;  
         }
         else{
-            costH.innerHTML = `Total $${data.total.toFixed(2)} (20% after tax)`;
+            
+            if (data.total == -17){
+                restoreAllStateItems();
+                costH.innerHTML = `Total #.#`;
+            }else{
+                costH.innerHTML = `Total $${data.total.toFixed(2)} (20% tax)`;
+            }
+            
          }
+         document.querySelector(".orderDetails").innerHTML = `${data.order_details}`;
     }
     
 
@@ -43,66 +51,102 @@ document.addEventListener('DOMContentLoaded', function() {
         // Find the card using the name as the image id
         const inputField = document.querySelector(`input[value="${name}"]`);
         const card = inputField.closest('.card');
-        // If card exists, proceed
+    
         if (card) {
             // Hide the original card
             card.classList.add('hide')
     
             // Clone the card
             const cardClone = card.cloneNode(true);
-            // Add the "stateItem" class to the cloned card
+    
+            // Remove unnecessary elements like rating and priceTag
+            const rating = cardClone.querySelector(".rating");
+            if (rating != null) {
+                rating.remove();
+            }
+            const priceTag = cardClone.querySelector(".priceTag");
+            if (priceTag != null) {
+                priceTag.remove();
+            }
+    
+            // Add animation and move to currentState
             cardClone.classList.add('stateItem');
-            cardClone.classList.remove("card", "hide")
+            cardClone.classList.remove("card", "hide");
     
             // Append the cloned card to the currentState div
             const currentStateDiv = document.querySelector('.currentState');
             currentStateDiv.appendChild(cardClone);
+    
+            // Wait for the animation to complete before removing the element
+            // setTimeout(() => {
+            //    cardClone.classList.remove('stateItem');
+            // }, 500); // 500ms is the animation duration
         } else {
             console.log(`Card with name "${name}" not found`);
         }
     }
+    
 
     function removeCardFromState(name) {
-        // Find the card in the "currentState" div using the input value attribute
         const currentStateDiv = document.querySelector('.currentState');
         const inputFieldInState = currentStateDiv.querySelector(`input[value="${name}"]`);
         const stateItem = inputFieldInState ? inputFieldInState.closest('.stateItem') : null;
     
-        // If the card exists in currentState, remove it
         if (stateItem) {
-            currentStateDiv.removeChild(stateItem);
+            // Add a class to animate the removal
+            stateItem.classList.add('removeCard');
+    
+            // Wait for the animation to complete, then remove the item
+            setTimeout(() => {
+                currentStateDiv.removeChild(stateItem);
+    
+                // Restore the visibility of the original card in the container div
+                const containerCard = document.querySelector(`input[value="${name}"]`).closest('.card');
+                if (containerCard) {
+                    containerCard.classList.remove('hide');
+                } else {
+                    console.log(`Card with name "${name}" not found in container`);
+                }
+            }, 500); // Wait for 500ms to allow the slideOut animation to complete
         } else {
             console.log(`Card with name "${name}" not found in currentState`);
         }
-    
-        // Restore the visibility of the original card in the container div
-        const containerCard = document.querySelector(`input[value="${name}"]`).closest('.card');
-        if (containerCard) {
-            containerCard.classList.remove('hide')
-        } else {
-            console.log(`Card with name "${name}" not found in container`);
-        }
     }
-
-    /** 
-     * 
-     * 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      }
-      
-      // Usage example
-      async function demo() {
-        console.log('Start');
-        moveCardToState("Classic Hot Dog");
-        moveCardToState("Burger")
-        await sleep(20000); // Sleep for 5 seconds
-        removeCardFromState("Classic Hot Dog");
-        await sleep(5000);
-        removeCardFromState("Burger");
-        console.log('End after 10 seconds');
-      }
-      
-      demo();*/    
+    
+    function restoreAllStateItems() {
+        // Get all the stateItem elements in the currentState div
+        const currentStateDiv = document.querySelector('.currentState');
+        const stateItems = currentStateDiv.querySelectorAll('.stateItem');
+    
+        // Iterate over each stateItem and move it back to the container
+        stateItems.forEach((stateItem, index) => {
+            // Add a small delay for each item's animation (for a staggered effect)
+            setTimeout(() => {
+                // Add the slideOut animation class to animate the removal
+                stateItem.classList.add('removeCard');
+                
+                // Find the corresponding input field to get the name of the item
+                const inputField = stateItem.querySelector('input');
+                const name = inputField ? inputField.value : null;
+    
+                if (name) {
+                    // Wait for the animation to complete, then remove the item
+                    setTimeout(() => {
+                        // Remove the stateItem from currentState
+                        currentStateDiv.removeChild(stateItem);
+    
+                        // Restore the original card in the container div
+                        const containerCard = document.querySelector(`input[value="${name}"]`).closest('.card');
+                        if (containerCard) {
+                            containerCard.classList.remove('hide');
+                        } else {
+                            console.log(`Card with name "${name}" not found in container`);
+                        }
+                    }, 500); // Wait for 500ms to allow the slideOut animation to complete
+                }
+            }, index * 100); // Add delay between each item's animation (100ms stagger)
+        });
+    }
+    
     
 })

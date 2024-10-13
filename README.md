@@ -1,158 +1,214 @@
-# 🍴 Auto Dine: Your Smart City Drive-Through Solution
+## Autodine Backend
 
-Auto Dine is an innovative automated food ordering system designed for smart cities, inspired by the evolving landscape of urban dining experiences. In light of recent developments in the industry, Auto Dine aims to enhance the drive-through experience by providing seamless and efficient food ordering through advanced automation.
+This is the backend of **Autodine**, a chatbot-based food ordering system that processes customer orders by checking item feasibility and placing orders. The backend is built using **Django** and provides endpoints for checking inventory, placing orders, and retrieving order history.
 
-<br>
+### Table of Contents
 
-## 🚀 Features
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Setup Instructions](#setup-instructions)
+- [API Endpoints](#api-endpoints)
+  - [Check Feasibility](#check-feasibility)
+  - [Place Order](#place-order)
+  - [Retrieve Menu](#retrieve-menu)
+  - [Order History](#order-history)
+- [Testing](#testing)
 
-- **Voice-Activated Ordering**: Interact with the system using natural language, making ordering quick and intuitive.
-- **Real-Time Inventory Updates**: Automatically updates inventory based on user orders to ensure availability.
-- **User-Friendly Dashboard**: View your choices and track your order status in an engaging interface.
-- **Future-Ready Technology**: Designed to adapt and scale for applications in various sectors, including healthcare and retail.
+---
 
+### Features
 
-## 🛠️ Getting Started
+- **Check Feasibility**: Verifies if the requested items are available in the inventory.
+- **Place Order**: Processes the order, deducts inventory, and stores the order in history.
+- **Order History**: Keeps track of all completed orders.
+- **Menu Retrieval**: Provides the list of available menu items.
 
-- Ensure you have Python 3.7 or higher installed.
-- Set up an OpenAI API account to access the AI functionalities.
-  
-<br>
+---
 
-## 🔧 Installation
+### Tech Stack
 
-Follow these steps to install and run Auto Dine on your local machine:
+- **Backend Framework**: Django (Python)
+- **Language**: Python 3.8+
+- **Dependencies**: Flask, requests
+
+---
+
+### Setup Instructions
 
 1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/autodine.git
-    ```
-2. **Navigate to the project directory**:
-    ```bash
-    cd autodine
-    ```
+
+   ```bash
+   git clone https://github.com/yourusername/autodine-backend.git
+   cd autodine-backend
+   ```
+
+2. **Create a virtual environment** (optional but recommended):
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows, use venv\Scripts\activate
+   ```
+
 3. **Install dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
 
-## 🔑 API Keys and Configuration
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- Obtain your OpenAI API key and save it securely.
-- Update the `settings.py` file with your OpenAI API key and any other necessary configurations.
+4. **Run the Flask server**:
 
-## 📚 Usage
+   ```bash
+   python app.py
+   ```
 
-To start using Auto Dine, follow these simple steps:
-
-1. **Launch the application**:
-    ```bash
-    python manage.py runserver
-    ```
-2. **Open your browser**: Navigate to `http://127.0.0.1:8000/`.
-3. **Interact with the system**: Use voice commands to place your order.
-4. **View your dashboard**: Monitor your selections and order progress in real-time.
-<br>
-
-## 📷 Screenshots
-
-![Dashboard](link_to_your_dashboard_screenshot)
-![Order Interaction](link_to_your_order_interaction_screenshot)
-![Real-Time Updates](link_to_your_real_time_updates_screenshot)
-<br>
-## 🤝 Contributing
-
-We welcome your contributions to make <b>Auto Dine</b> even better! Whether you have ideas for new features, suggestions for improvement, or have found issues, we’d love to hear from you.
-<br>
-### How to Contribute
-
-1. **Fork the repository**.
-2. **Create a new branch**:
-    ```bash
-    git checkout -b feature-branch
-    ```
-3. **Make your changes**.
-4. **Commit your changes**:
-    ```bash
-    git commit -m "Description of changes"
-    ```
-5. **Push to the branch**:
-    ```bash
-    git push origin feature-branch
-    ```
-6. **Open a pull request**.
-   
-<br>
-
-## 🗺️ Roadmap
-
-- [ ] Expand the application for use in pharmacies and other retail environments.
-- [ ] Implement user accounts for saving order history and preferences.
-
-## ❓ FAQs
-
-**Q: How does Auto Dine handle inventory updates?**  
-A: Inventory is updated in real-time based on user orders, ensuring accurate availability.
-Sure! Here are some additional FAQs that you could include in your README for Auto Dine:
+   The server should be running on `http://127.0.0.1:5000`.
 
 ---
 
-**Q: What platforms does Auto Dine support?**  
-A: Auto Dine is designed for deployment in smart city environments but can be adapted for various platforms, including web and mobile.
+### API Endpoints
+
+#### Check Feasibility
+
+- **Endpoint**: `/check_feasible_items/`
+- **Method**: `POST`
+- **Description**: Checks whether the requested items are available in inventory.
+- **Request Body**:
+
+  ```json
+  {
+    "items": {
+      "Burger": {},
+      "Fries": {}
+    }
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "feasible": true,
+    "unavailable_items": []
+  }
+  ```
+
+#### Place Order
+
+- **Endpoint**: `/order_items/`
+- **Method**: `POST`
+- **Description**: Places an order, deducts from inventory, and stores the order in history.
+- **Request Body**:
+
+  ```json
+  {
+    "items": {
+      "Burger": {},
+      "Fries": {}
+    },
+    "tip": 3.50
+  }
+  ```
+
+- **Response**:
+
+  ```json
+  {
+    "status": "success",
+    "order_id": 1
+  }
+  ```
+
+#### Retrieve Menu
+
+- **Endpoint**: `/menu`
+- **Method**: `GET`
+- **Description**: Retrieves the available menu and item quantities.
+- **Response**:
+
+  ```json
+  {
+    "Burger": 9,
+    "Fries": 19,
+    "Chicken Sandwich": 10,
+    "Bacon Cheeseburger": 8,
+    ...
+  }
+  ```
+
+#### Order History
+
+- **Endpoint**: `/order_history`
+- **Method**: `GET`
+- **Description**: Retrieves the history of all placed orders.
+- **Response**:
+
+  ```json
+  [
+    {
+      "items": {
+        "Burger": {},
+        "Fries": {}
+      },
+      "tip": 3.50,
+      "status": "completed"
+    }
+  ]
+  ```
 
 ---
 
-**Q: How does Auto Dine ensure data privacy?**  
-A: User data is handled securely, and no personal information is stored unless explicitly required for order processing. We comply with best practices in data privacy.
+### Testing
+
+To test the API using `requests`, follow these steps:
+
+1. **Test Feasibility**:
+
+   ```python
+   import requests
+
+   feasibility_url = 'http://127.0.0.1:5000/check_feasible_items/'
+
+   payload = {
+       "items": {
+           "Burger": {},
+           "Fries": {}
+       }
+   }
+
+   response = requests.post(feasibility_url, json=payload)
+   print("Feasibility Response:", response.json())
+   ```
+
+2. **Test Place Order**:
+
+   ```python
+   order_url = 'http://127.0.0.1:5000/order_items/'
+
+   order_payload = {
+       "items": {
+           "Burger": {},
+           "Fries": {}
+       },
+       "tip": 3.50
+   }
+
+   response = requests.post(order_url, json=order_payload)
+   print("Order Response:", response.json())
+   ```
+
+3. **Test Menu Retrieval**:
+
+   ```python
+   menu_url = 'http://127.0.0.1:5000/menu'
+
+   response = requests.get(menu_url)
+   print("Menu:", response.json())
+   ```
 
 ---
 
-**Q: Can Auto Dine be integrated with existing restaurant systems?**  
-A: Yes, Auto Dine can be integrated with existing inventory and POS systems to streamline operations.
+### Future Enhancements
 
----
-
-**Q: What should I do if I encounter a bug?**  
-A: Please open an issue in the GitHub repository detailing the bug, including steps to reproduce it. We appreciate your help in making Auto Dine better!
-
----
-
-**Q: Are there any known limitations?**  
-A: Currently, Auto Dine may have limitations in processing complex orders with multiple customizations. We are continuously working to improve these features.
-
----
-
-**Q: Can I contribute to the project?**  
-A: Absolutely! We welcome contributions. Please refer to the "Contributing" section in this README for guidelines.
-
----
-
-**Q: How can I test Auto Dine locally?**  
-A: After setting up the project as described in the installation section, you can run the Django development server to test the application locally.
-
----
-
-**Q: Is there a mobile version of Auto Dine?**  
-A: At the moment, Auto Dine is web-based, but we plan to explore mobile app development in the future.
-
----
-
-**Q: What technologies does Auto Dine utilize?**  
-A: Auto Dine is built using Django for the backend, OpenAI API for AI functionalities, and standard web technologies (HTML, CSS, JavaScript) for the frontend.
-
----
-
-Feel free to modify or expand upon these FAQs based on your project's specifics and common questions you anticipate from users!
-<br>
-
-## 🙏 Acknowledgments
-
-- Special thanks to the HackHarvard community for the opportunity and resources provided during this hackathon!
-<br>
-
-## 📬 Contact
-
-For any questions or further assistance, please reach out to sohancollege27@gmail.com/reda.acrav@gmail.com//.
-
----
-
+- Add user authentication for order management.
+- Implement real-time inventory updates using websockets.
+- Create a dashboard for admins to view orders and inventory in real-time.

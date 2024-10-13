@@ -15,11 +15,12 @@ dashboard_info = {
     "add_to_db": [],
     "remove_from_db": [],
     "previous items": set(),
-    "total": 0.0
+    "total": 0.0,
+    "order_details":""
 }
 
 # Update dashboard info based on items and their feasibility
-def update_dashboard(items, feasibility, total):
+def update_dashboard(items, feasibility, total, order_details):
     dashboard_info
     items_keys = set(items.keys())
     
@@ -36,6 +37,7 @@ def update_dashboard(items, feasibility, total):
     # Update the previous items set
     dashboard_info['previous items'] = items_keys
     dashboard_info["total"] = total
+    dashboard_info["order_details"] = order_details
 
 def event_stream():
     while True:
@@ -97,6 +99,7 @@ def check_feasible_items(request):
         # Get the current inventory instance (assuming you have only one inventory object)
         inventory = Inventory.objects.first()
         total_order_cost, stop = 0, False
+        order_details = ""
         # Loop through each menu item in the input dictionary
         for item_name, additional_ingredients in items.items():
             # Check if the item is feasible in the inventory
@@ -104,10 +107,13 @@ def check_feasible_items(request):
             if "total_cost" not in feasibility[item_name]:
                 stop = True 
                 total_order_cost = 0
+                order_details += f"{item_name}: ####\n"
             elif not stop:
-                total_order_cost += feasibility[item_name]["total_cost"]
+                cost = feasibility[item_name]["total_cost"]
+                total_order_cost += cost
+                order_details += f"{item_name}: ${cost}.\n"
 
-        update_dashboard(items, feasibility, total_order_cost * 1.20) # 1.20 for taxes
+        update_dashboard(items, feasibility, total_order_cost * 1.20, order_details) # 1.20 for taxes
         # Return the feasibility result as JSON
         return JsonResponse(feasibility, status=200)
 
@@ -170,7 +176,8 @@ def order_items(request):
         dashboard_info["add_to_db"].clear()
         dashboard_info["remove_from_db"].clear()
         dashboard_info["previous items"].clear()
-        dashboard_info["total"] = 0.0
+        dashboard_info["total"] = -17
+        dashboard_info["order_details"] = ""
         # Return success response
         return JsonResponse({
             'status': 'success',

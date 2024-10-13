@@ -15,7 +15,7 @@ from RealtimeSTT import AudioToTextRecorder
 # engine = GTTSEngine()
 # stream = TextToAudioStream(engine)
 engine = pyttsx3.init() # object creation
-client = openai.OpenAI(api_key="sk-Lj1Ih_vxZAA5uWDWfqe1RWuVZdKYW519faEN-rhZgzT3BlbkFJbIBj2ehTCZVN_nYywRkrmAqHQfkhHsDaW5rdEEW-AA")
+client = openai.OpenAI(api_key="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")
 
 menu = """
     - Burger: Delicious beef burger
@@ -30,6 +30,21 @@ menu = """
     - Spinach & Egg Wrap: Healthy spinach and egg wrap
     - Coffee: Freshly brewed coffee
     - Classic Hot Dog: Hot dog with ketchup and mustard
+"""
+
+menu_with_prices = """
+    - Burger: Delicious beef burger $5.99
+    - Fries: Crispy golden fries $2.99
+    - Chicken Sandwich: Grilled chicken sandwich with mayo and lettuce $7.99
+    - Bacon Cheeseburger: Beef patty with bacon, cheese, and lettuce $8.99
+    - Avocado Toast: Fresh avocado spread on toasted bread $5.99
+    - BLT Sandwich: Bacon, lettuce, and tomato sandwich $6.99
+    - Caesar Salad: Classic Caesar salad with chicken, croutons, and Caesar dressing $6.49
+    - Egg Salad Sandwich: Egg salad sandwich with mayo on toasted bread $4.99
+    - Veggie Burger: Healthy veggie patty burger with lettuce, tomato, and onion $7.49
+    - Spinach & Egg Wrap: Healthy spinach and egg wrap $5.99
+    - Coffee: Freshly brewed coffee $2.49
+    - Classic Hot Dog: Hot dog with ketchup and mustard $3.99
 """
 
 def parse_order_with_llm(messages):
@@ -163,8 +178,8 @@ def chatbot_conversation():
     messages = []
     while True:
         # Listen to user's order
-        user_input = recorder.text()
-        # user_input = input("User: ")
+        # user_input = recorder.text()
+        user_input = input("User: ")
         if user_input != "":
             # print(user_input)
             messages.append({"role": "user", "content": user_input})

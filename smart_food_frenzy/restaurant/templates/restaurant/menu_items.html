@@ -34,7 +34,7 @@
                         <div>No ingredients listed</div>
                     {% endfor %}
                 </div>
-                <p>Price: <b>${{ item.price }}</b></p>
+                <p class="priceTag">Price: <b>${{ item.price }}</b></p>
             
         </div>
         {% endfor %}
@@ -49,7 +49,8 @@
         </div>
 
         <div class="stateInfo">
-            <h2 class="totalCost">Total: #.#</h2>
+            <div class="orderDetails"></div>
+            <div><h2 class="totalCost">Total: #.#</h2></div>
         </div>
 
     </div>
