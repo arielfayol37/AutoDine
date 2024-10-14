@@ -16,7 +16,9 @@ dashboard_info = {
     "remove_from_db": [],
     "previous items": set(),
     "total": 0.0,
-    "order_details":""
+    "order_details":"",
+    "thinking":False,
+    "recording":False
 }
 
 # Update dashboard info based on items and their feasibility
@@ -41,7 +43,7 @@ def update_dashboard(items, feasibility, total, order_details):
 
 def event_stream():
     while True:
-        time.sleep(1)
+        time.sleep(0.02)
 
         # Convert the 'previous items' set to a list for JSON serialization
         dashboard_info_copy = dashboard_info.copy()  # Create a copy to avoid modifying the original
@@ -67,6 +69,23 @@ def menu_view(request):
 def ingredients_list(request):
     ingredients = Ingredient.objects.all()  # Fetch all ingredients from the database
     return render(request, 'restaurant/ingredients_list.html', {'ingredients': ingredients})
+
+def video_view(request):
+    return render(request, 'restaurant/drive_thru_video.html')
+
+def llm_thinking(request, set_thinking):
+    if set_thinking == "set":
+        dashboard_info["thinking"] = True
+    else:
+        dashboard_info["thinking"] = False
+    return JsonResponse({}, status=200)
+
+def llm_recording(request, set_recording):
+    if set_recording == "set":
+        dashboard_info["recording"] = True
+    else:
+        dashboard_info["recording"] = False
+    return JsonResponse({}, status=200)
 
 @csrf_exempt  # Disable CSRF protection for this view
 @require_POST
@@ -108,15 +127,15 @@ def check_feasible_items(request):
         for item_name, additional_ingredients in items.items():
             # Check if the item is feasible in the inventory
             feasibility[item_name] = inventory.is_feasible(item_name, additional_ingredients)
-            if "total_cost" not in feasibility[item_name]:
+            if "item_cost" not in feasibility[item_name]:
                 stop = True 
                 total_order_cost = 0
                 order_details += f"{item_name}: ####\n"
             elif not stop:
-                cost = feasibility[item_name]["total_cost"]
+                cost = feasibility[item_name]["item_cost"]
                 total_order_cost += cost
                 order_details += f"{item_name}: ${cost}.\n"
-
+        feasibility["order_cost_so_far_after_taxes"] = "#.#" if stop  else str(total_order_cost * 1.20)
         update_dashboard(items, feasibility, total_order_cost * 1.20, order_details) # 1.20 for taxes
         # Return the feasibility result as JSON
         return JsonResponse(feasibility, status=200)
@@ -182,6 +201,8 @@ def order_items(request):
         dashboard_info["previous items"].clear()
         dashboard_info["total"] = -17
         dashboard_info["order_details"] = ""
+        dashboard_info["thinking"] = False
+        dashboard_info["recording"] = False
         # Return success response
         return JsonResponse({
             'status': 'success',

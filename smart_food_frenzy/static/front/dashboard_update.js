@@ -17,6 +17,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function updateDashboard(data) {
+        const statusBar = document.querySelector(".thinkingBar")
+        if(data.thinking == true){
+            statusBar.classList.remove("hide");
+            statusBar.classList.add("orange");
+            statusBar.classList.remove("blue")
+        }else if(data.recording == true){
+            statusBar.classList.remove("hide");
+            statusBar.classList.add("blue");
+            statusBar.classList.remove("orange");
+        }else{
+            statusBar.classList.add("hide");
+        }
         // Handle items to add to the dashboard (currentState div)
         data.add_to_db.forEach(item => {
             const name = item.name;  // Get the item name

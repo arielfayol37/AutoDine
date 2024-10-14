@@ -216,7 +216,7 @@ class Inventory(models.Model):
                     total, stop = 0, True
                 if not stop:
                     marginal_cost += (required_quantity - item_ingredient.quantity_required) * ingredient.cost
-            if not stop: response["total_cost"] = round(menu_item.price + marginal_cost, 2)
+            if not stop: response["item_cost"] = round(menu_item.price + marginal_cost, 2)
             return response
 
         except MenuItem.DoesNotExist:

@@ -160,3 +160,37 @@ body {
 .removeCard {
     animation: slideOut 0.5s ease forwards;
 }
+
+.thinkingBar {
+    width: 100px;
+    height: 5px;
+    background-color: #ff6347;
+    position: relative;
+    animation: moveLeftRight 1s infinite ease-in-out;
+    border-radius: 20%;
+  }
+
+ .orange {
+    background-color: #ff6347;
+ } 
+.blue {
+    background-color: dodgerblue;
+}
+  
+  @keyframes moveLeftRight {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(100%);
+    }
+    50% {
+        transform: translateX(0);
+    }
+    75% {
+        transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
