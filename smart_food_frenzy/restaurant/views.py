@@ -70,9 +70,6 @@ def ingredients_list(request):
     ingredients = Ingredient.objects.all()  # Fetch all ingredients from the database
     return render(request, 'restaurant/ingredients_list.html', {'ingredients': ingredients})
 
-def video_view(request):
-    return render(request, 'restaurant/drive_thru_video.html')
-
 def llm_thinking(request, set_thinking):
     if set_thinking == "set":
         dashboard_info["thinking"] = True

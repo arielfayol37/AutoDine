@@ -1,1 +1,4 @@
 openai_key.json
+venv/
+models/
+api_keys.json
