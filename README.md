@@ -245,9 +245,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 📞 Support
 
 For support and questions:
-- Create an issue in the repository
-- Check the documentation in `Autodine Official Documentation.pdf`
-- Review the test files in the `playground/` directory
+Contact me at arielfayol1@gmail.com or fayol.ateufackzeudom@valpo.edu.
 
 ---
 
