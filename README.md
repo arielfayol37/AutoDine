@@ -1,6 +1,6 @@
 # AutoDine - AI-Powered Voice-Controlled Restaurant Ordering System
 
-Demo[https://drive.google.com/file/d/1_CU97mtdx78SFR1HpfDJVwXpLR4XiIlj/view]
+[Demo](https://drive.google.com/file/d/1_CU97mtdx78SFR1HpfDJVwXpLR4XiIlj/view)
 
 ## 🍔 Overview
 
