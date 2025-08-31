@@ -55,7 +55,6 @@ The project consists of several interconnected components:
 - **OpenAI GPT** - Conversation handling
 - **Coqui TTS** - Text-to-speech engine
 - **Faster Whisper** - Speech recognition
-- **Azure Cognitive Services** - Speech processing
 
 ## 📋 Prerequisites
 
@@ -68,7 +67,7 @@ The project consists of several interconnected components:
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/arielfayol37/AutoDine
 cd AutoDine
 ```
 
@@ -90,11 +89,6 @@ Create an `api_keys.json` file in the root directory:
 cd smart_food_frenzy
 python manage.py migrate
 python manage.py createsuperuser
-```
-
-### 5. Load Sample Data (Optional)
-```bash
-python manage.py loaddata sample_data.json
 ```
 
 ## 🎯 Usage
@@ -205,50 +199,3 @@ python test_request.py # API request testing
 ### Web Interface Testing
 - Access `http://localhost:8000/menu/` for menu display
 - Use `http://localhost:8000/ingredients_list` for inventory view
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **Audio Not Working**
-   - Check microphone permissions
-   - Verify audio drivers are installed
-   - Test with `playground/test_sr.py`
-
-2. **OpenAI API Errors**
-   - Verify API key in `api_keys.json`
-   - Check internet connection
-   - Ensure sufficient API credits
-
-3. **Django Server Issues**
-   - Check if port 8000 is available
-   - Verify database migrations
-   - Check Django logs for errors
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- OpenAI for GPT integration
-- Coqui AI for TTS capabilities
-- Django community for the web framework
-- Contributors and testers
-
-## 📞 Support
-
-For support and questions:
-Contact me at arielfayol1@gmail.com or fayol.ateufackzeudom@valpo.edu.
-
----
-
-**AutoDine** - Revolutionizing restaurant ordering with AI-powered voice interaction! 🎤🍕
